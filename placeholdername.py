@@ -62,14 +62,15 @@ class placeholder():
         print(seed)
         return
     
-    def TextCount(self,filename):
+    def TextMostCommon(self,filename):
         self._filename = filename
         with codecs.open("twitterdata/"+self._filename+".txt","r","utf-8") as f:
             lines = f.read()
             tknzr = TweetTokenizer()
             tknz_lines =tknzr.tokenize(lines)
-            self._counts = Counter(tknz_lines)
-        return self._counts
+            n = int(input("Choose an N for the amount of most common: "))
+            self._mostcommon = Counter(tknz_lines).most_common(n)
+        return self._mostcommon
     
     def TextTotalCounts(self,filename):
         self._filename = filename
