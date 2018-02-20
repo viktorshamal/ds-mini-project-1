@@ -4,7 +4,9 @@ import codecs
 import json
 from collections import Counter
 import nltk
-#
+import random
+from nltk.probability import ConditionalFreqDist
+
 #from pprint import pprint
 #from string import punctuation
 #from nltk.corpus import stopwords
@@ -28,14 +30,22 @@ class placeholder():
                     
     def Bigrams(self,filename):
         self._filename = filename
-        with codecs.open("twitterdata/"+self._filename+".txt","r","utf-8") as f:    
-            gram = nltk.ngrams(f,2)
-            return
+        with codecs.open("twitterdata/"+self._filename+".txt","r","utf-8") as f:
+            document = f.read()    
+            gram = nltk.ngrams(document,2)
+        cfd=ConditionalFreqDist([(tuple(a), b) for *a,b in gram])
+        seed=["amager"]
+        def generate(seed, cfd, maxcount=100):
+            for i in range(maxcount):
+                seed.append(random.choice(list(cfd[tuple(seed[-1:])].keys())))
+            return seed
+        print(generate(seed, cfd))
+        return
     
     def TextCount(self,filename):
         self._filename = filename
         with codecs.open("twitterdata/"+self._filename+".txt","r","utf-8") as f:
-            lines = [line for line in f]
+            lines = f.read()
             self._counts = Counter(lines)
         return self._counts
     
@@ -44,6 +54,8 @@ class placeholder():
         with codecs.open("twitterdata/"+self._filename+".txt","r","utf-8") as f:
             self._totalcount = len(f)
         return self._totalcount
+    
+    
 #WriteTweetTxtFile("amager")
 #bigrams(city)
 #    text = tweets[]["text"]
