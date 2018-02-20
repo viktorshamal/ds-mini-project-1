@@ -6,6 +6,7 @@ from collections import Counter
 import nltk
 import random
 from nltk.probability import ConditionalFreqDist
+from nltk import TweetTokenizer
 
 #from pprint import pprint
 #from string import punctuation
@@ -31,28 +32,52 @@ class placeholder():
     def Bigrams(self,filename):
         self._filename = filename
         with codecs.open("twitterdata/"+self._filename+".txt","r","utf-8") as f:
-            document = f.read()    
-            gram = nltk.ngrams(document,2)
-        cfd=ConditionalFreqDist([(tuple(a), b) for *a,b in gram])
-        seed=["amager"]
-        def generate(seed, cfd, maxcount=100):
-            for i in range(maxcount):
-                seed.append(random.choice(list(cfd[tuple(seed[-1:])].keys())))
-            return seed
-        print(generate(seed, cfd))
+            lines = f.read()
+            tknzr = TweetTokenizer()
+            tknz_lines =tknzr.tokenize(lines)
+            bigram = nltk.ngrams(tknz_lines,2)
+        cfd=ConditionalFreqDist([(tuple(a), b) for *a,b in bigram])
+        seed=["The"]
+        for i in range(100):
+            seed.append(random.choice(list(cfd[tuple(seed[-1:])].keys())))
+        return seed
+        print(seed)
+        return
+    
+    def Trigrams(self,filename):
+        self._filename = filename
+        with codecs.open("twitterdata/"+self._filename+".txt","r","utf-8") as f:
+            lines = f.read()
+            tknzr = TweetTokenizer()
+            tknz_lines =tknzr.tokenize(lines)
+        emptylist=[]
+        maxhistory = 3
+        for i in range(2, maxhistory+1):
+            emptylist+=nltk.ngrams(tknz_lines, i)
+        cfd=ConditionalFreqDist([(tuple(a), b) for *a,b in emptylist])       
+        seed=["The"]
+        for i in range(100):
+            seed.append(random.choice(list(cfd[tuple(seed[-1:])].keys())))
+        return seed
+        print(seed)
         return
     
     def TextCount(self,filename):
         self._filename = filename
         with codecs.open("twitterdata/"+self._filename+".txt","r","utf-8") as f:
             lines = f.read()
-            self._counts = Counter(lines)
+            tknzr = TweetTokenizer()
+            tknz_lines =tknzr.tokenize(lines)
+            self._counts = Counter(tknz_lines)
         return self._counts
     
     def TextTotalCounts(self,filename):
         self._filename = filename
         with codecs.open("twitterdata/"+self._filename+".txt","r","utf-8") as f:
-            self._totalcount = len(f)
+            lines = f.read()
+            tknzr = TweetTokenizer()
+            tknz_lines =tknzr.tokenize(lines)
+            self._totalcount = len(tknz_lines)
         return self._totalcount
     
     
