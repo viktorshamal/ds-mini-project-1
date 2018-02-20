@@ -29,35 +29,31 @@ class placeholder():
                 for i in range(len(tweets)):
                     file.write(tweets[i]["text"]+"\n")
                     
-    def Bigrams(self,filename):
-        self._filename = filename
-        with codecs.open("twitterdata/"+self._filename+".txt","r","utf-8") as f:
-            lines = f.read()
-            tknzr = TweetTokenizer()
-            tknz_lines =tknzr.tokenize(lines)
-            bigram = nltk.ngrams(tknz_lines,2)
-        cfd=ConditionalFreqDist([(tuple(a), b) for *a,b in bigram])
-        seed=["The"]
-        for i in range(100):
-            seed.append(random.choice(list(cfd[tuple(seed[-1:])].keys())))
-        return seed
-        print(seed)
-        return
-    
-    def Trigrams(self,filename):
+    def Ngrams(self,filename):
         self._filename = filename
         with codecs.open("twitterdata/"+self._filename+".txt","r","utf-8") as f:
             lines = f.read()
             tknzr = TweetTokenizer()
             tknz_lines =tknzr.tokenize(lines)
         emptylist=[]
-        maxhistory = 3
+        maxhistory = int(input("Choose n for ngram, preferably 2 or 3: "))
         for i in range(2, maxhistory+1):
             emptylist+=nltk.ngrams(tknz_lines, i)
         cfd=ConditionalFreqDist([(tuple(a), b) for *a,b in emptylist])       
-        seed=["The"]
+        seed=[filename]
         for i in range(100):
-            seed.append(random.choice(list(cfd[tuple(seed[-1:])].keys())))
+            for j in range(maxhistory-1,0,-1):
+                if tuple(seed[-j:]) in cfd:
+                    valuesum=sum(cfd[tuple(seed[-j:])].values())
+                    value = random.randint(0,valuesum)
+                    for key in cfd[tuple(seed[-j:])].keys():
+                        value-=cfd[tuple(seed[-j:])][key]
+                        if value <= 0:
+                            seed.append(key)
+                            break
+                    break
+                else:
+                    continue
         return seed
         print(seed)
         return
