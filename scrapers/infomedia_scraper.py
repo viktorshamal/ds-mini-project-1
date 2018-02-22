@@ -3,11 +3,12 @@ import json
 import pprint
 import glob
 import os
+import re
 
 pp = pprint.PrettyPrinter()
 
 
-def article_file_to_ids(directory):
+def article_file_to_ids():
     path = '../infomedia_data/'
     article_files = glob.glob(path + "*.json")
 
@@ -36,9 +37,29 @@ def get_article(id):
 
     response = requests.request("POST", url, data=payload, headers=headers)
 
-    data = json.loads(response.text)
+    if(response.text):
+        return json.loads(response.text)
+    else:
+        return None
 
-    return data
+
+def scrape_articles(district):
+    path = '../infomedia_data/'
+    filename = path + district + '_ids_.txt'
+    writefile = open(path + district + '.txt', 'w', errors="replace")
+
+    with open(filename) as f:
+        for ids in f:
+            article = get_article(ids)
+            if(article):
+                text = article['BodyText'] + '\n' + \
+                    article['Subheading'] + '\n'
+                text = re.sub('<[^<]+?>', '', text)
+                writefile.write(text)
+            else:
+                print('Skipped ' + ids)
 
 
-article_file_to_ids('vesterbro')
+for district in ['valby']:
+    print('Start scraping: ' + district)
+    scrape_articles(district)
