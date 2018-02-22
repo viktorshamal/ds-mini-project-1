@@ -7,7 +7,7 @@ import os
 pp = pprint.PrettyPrinter()
 
 
-def article_file_to_ids(directory):
+def article_file_to_ids():
     path = '../infomedia_data/'
     article_files = glob.glob(path + "*.json")
 
@@ -41,4 +41,4 @@ def get_article(id):
     return data
 
 
-article_file_to_ids('vesterbro')
+article_file_to_ids()
