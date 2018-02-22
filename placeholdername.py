@@ -9,30 +9,23 @@ from nltk.probability import ConditionalFreqDist
 from nltk import TweetTokenizer
 import re
 
-#from pprint import pprint
-#from string import punctuation
-#from nltk.corpus import stopwords
-#from nltk import word_tokenize
-#from math import log
-
-class placeholder():
+class Placeholder():
 
     def __init__(self,filepath):
         self._filepath= filepath
         self._counts = 0
         self._totalcount = 0
 
-    def WriteTweetTxtFile(self):
-#        self._filepath = filepath
+    def write_tweet_txt_file(self):
         with codecs.open(self._filepath+".json","r","utf-8") as f:
             tweets = json.load(f,encoding = "utf-8")
             with open(self._filepath+".txt","w") as file:
                 for i in range(len(tweets)):
                     file.write(tweets[i]["text"]+"\n")
 
-    def Ngrams(self):
-#        self._filepath = filepath
-        name = re.findall("\w+$",self._filepath)
+    def ngrams(self):
+#        name = re.findall("\w+$",self._filepath)
+        name = str(input("choose a seed: "))
         with codecs.open(self._filepath+".txt","r","utf-8") as f:
             lines = f.read()
             tknzr = TweetTokenizer()
@@ -42,7 +35,7 @@ class placeholder():
         for i in range(2, maxhistory+1):
             emptylist+=nltk.ngrams(tknz_lines, i)
         cfd=ConditionalFreqDist([(tuple(a), b) for *a,b in emptylist])
-        seed=[str(name[0])]
+        seed=[name]
         for i in range(100):
             for j in range(maxhistory-1,0,-1):
                 if tuple(seed[-j:]) in cfd:
@@ -60,9 +53,8 @@ class placeholder():
         print(seed)
         return
 
-    def TextMostCommon(self):
-#        self._filepath = filepath
-        with codecs.open("twitterdata/"+self._filename+".txt","r","utf-8") as f:
+    def text_most_common(self):
+        with codecs.open(self._filepath+".txt","r","utf-8") as f:
             lines = f.read()
             tknzr = TweetTokenizer()
             tknz_lines =tknzr.tokenize(lines)
@@ -70,19 +62,18 @@ class placeholder():
             self._mostcommon = Counter(tknz_lines).most_common(n)
         return self._mostcommon
 
-    def TextTotalCounts(self):
-#        self._filepath = filepath
-        with codecs.open("twitterdata/"+self._filepath+".txt","r","utf-8") as f:
+    def text_total_counts(self):
+        with codecs.open(self._filepath+".txt","r","utf-8") as f:
             lines = f.read()
             tknzr = TweetTokenizer()
             tknz_lines =tknzr.tokenize(lines)
             self._totalcount = len(tknz_lines)
         return self._totalcount
 
-    def hashtagtracker(self):
+    def hashtag_tracker(self):
         hashlist=[]
-        txt=open(self._filepath+".txt","r")
-        reader=txt.readlines()
+        txt=codecs.open(self._filepath+".txt","r","utf-8")
+        reader=txt.read()
         for line in reader:
             hashtags=re.findall(r"#(\w+)", line)
             for hashtag in hashtags:
@@ -94,21 +85,13 @@ class placeholder():
         return count.most_common(100)
 
 
-    def linkandhashtagremover(self)
+    def link_and_hashtag_remover(self):
         text_file = open(self._filepath+"-notrash.txt", "w")
-        txt=open(self._filepath,"r")
-        reader=txt.readlines()
-        for line in reader:
-            nolinks=re.sub(r'\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:\/[^\s/]*))*', '', line, flags=re.MULTILINE)
+        with codecs.open(self._filepath+".txt","r","utf-8") as f:
+            lines=f.read()
+            nolinks = re.sub("htt.+:[\/||\w||.||\-||=]+", "link_placeholder", lines)
             hashless=re.sub(r"#(\w+)", '', nolinks, flags=re.MULTILINE)
-            s = re.sub(r'www\.\S+\.dk', '',hashless)
-            b = re.sub(r'www\.\S+\.com', '',s)
-            text_file.write(str(b),"\n")
-
-#WriteTweetTxtFile("amager")
-#bigrams(city)
-#    text = tweets[]["text"]
-#    gram = nltk.ngrams(text,2)
-#        pprint(data)
-#        condition_pairs = (((w0, w1) for w0, w1 in gram))
-#        dist = nltk.ConditionalFreqDist(condition_pairs)
+            s = re.sub("[\/||\w||.||\-]+.dk", '',hashless)
+            text_file.write(s)
+            text_file.write("\n")
+            
