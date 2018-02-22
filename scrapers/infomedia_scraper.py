@@ -37,9 +37,10 @@ def get_article(id):
 
     response = requests.request("POST", url, data=payload, headers=headers)
 
-    data = json.loads(response.text)
-
-    return data
+    if(response.text):
+        return json.loads(response.text)
+    else:
+        return None
 
 
 def scrape_articles(district):
@@ -50,11 +51,15 @@ def scrape_articles(district):
     with open(filename) as f:
         for ids in f:
             article = get_article(ids)
-            text = article['BodyText'] + '\n' + article['Subheading'] + '\n'
-            text = re.sub('<[^<]+?>', '', text)
-            writefile.write(text)
+            if(article):
+                text = article['BodyText'] + '\n' + \
+                    article['Subheading'] + '\n'
+                text = re.sub('<[^<]+?>', '', text)
+                writefile.write(text)
+            else:
+                print('Skipped ' + ids)
 
 
-for district in ['vesterbro', 'amager', 'østerbro', 'indreby', 'nørrebro']:
+for district in ['valby']:
     print('Start scraping: ' + district)
     scrape_articles(district)
