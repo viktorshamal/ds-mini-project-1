@@ -31,21 +31,17 @@ documents = open(path,encoding="utf8")
 
 no_features = 1000
 
+
 # LDA can only use raw term counts for LDA because it is a probabilistic graphical model
 tf_vectorizer = CountVectorizer(max_df=0.95, min_df=2, max_features=no_features,stop_words=None)
 tf = tf_vectorizer.fit_transform(getiterator())
 tf_feature_names = tf_vectorizer.get_feature_names()
 
 
-
-
 no_topics = 10
-# Run NMF
-nmf = NMF(n_components=no_topics, random_state=1, alpha=.1, l1_ratio=.5, init='nndsvd').fit(tfidf)
 
 # Run LDA
-	#lda = LatentDirichletAllocation(n_topics=no_topics, max_iter=5, learning_method='online', learning_offset=50.,random_state=0).fit(tf)
+lda = LatentDirichletAllocation(n_topics=no_topics, max_iter=5, learning_method='online', learning_offset=50.,random_state=0).fit(tf)
 
 no_top_words = 10
-display_topics(nmf, tfidf_feature_names, no_top_words)
-#display_topics(lda, tf_feature_names, no_top_words)	
+display_topics(lda, tf_feature_names, no_top_words)	
