@@ -4,13 +4,13 @@ Created on Wed Feb 21 14:46:17 2018
 
 @author: jeppe
 """
-from placeholdername import placeholder
-import re
-path1= "twitterdata/amager"
-path2= "instagram/scrapefiles/amager"
-ph1 = placeholder(path1)
-print(ph1.Ngrams())
+from placeholdername import Placeholder
 
-ph2 = placeholder(path2)
-print(ph2.Ngrams())
+path1= "twitterdata/vesterbro"
+path2= "instagram/scrapefiles/vesterbro"
 
+ph1 = Placeholder(path1)
+ph1.link_and_hashtag_remover()
+
+ph2 = Placeholder(path2)
+ph2.link_and_hashtag_remover()
