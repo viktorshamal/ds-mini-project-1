@@ -12,18 +12,23 @@ import os
 #from algs4.stdlib import stdio
 #file = argv[1]
 
-def sentimentscore():
-    af = afinn.Afinn(language="da")
-    path = '../infomedia_data/'
-    text_files = glob.glob(path + "*.txt")
-    results = []
-    for tf in text_files:
-        path = os.path.splitext(tf)[0]
-        with codecs.open(tf,encoding = "latin-1" )['Articles'] as f:
-            text = f.read()
-            score = af.score(text)
-            results.append(score)
+#def sentimentscore():
+af = afinn.Afinn(language="da")
+path = 'infomedia_data/'
+text_files = glob.glob(path + "*.txt")
+results = []
+cities = ["amager","indreby","nørrebro","torvehallerne","valby","vesterbro","østerbro"]
+print(text_files)
+for tf in text_files:
+    path = os.path.splitext(tf)[0]
+#    print(tf)
+    with codecs.open(tf,encoding = "latin-1" ) as f:
+        text = f.read()
+        score = af.score(text)
+        results.append(score)
 #        with codecs.open(articles,encoding = "latin-1") as f:
-    return results
-
-print(sentimentscore())
+print(results)
+with open("twitterdata/sentiment_results/results.txt","w") as f:
+    for result in results:
+        f.write(str(result)+"\n")
+#print(sentimentscore())

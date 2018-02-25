@@ -17,7 +17,7 @@ class Placeholder():
         self._totalcount = 0
 
     def write_tweet_txt_file(self):
-        with codecs.open(self._filepath+".json","r","utf-8") as f:
+        with codecs.open(self._filepath+".json","r","latin-1") as f:
             tweets = json.load(f,encoding = "utf-8")
             with open(self._filepath+".txt","w") as file:
                 for i in range(len(tweets)):
@@ -26,7 +26,7 @@ class Placeholder():
     def ngrams(self):
 #        name = re.findall("\w+$",self._filepath)
         name = str(input("choose a seed: "))
-        with codecs.open(self._filepath+".txt","r","utf-8") as f:
+        with codecs.open(self._filepath+".txt","r","latin-1") as f:
             lines = f.read()
             tknzr = TweetTokenizer()
             tknz_lines =tknzr.tokenize(lines)
@@ -54,7 +54,7 @@ class Placeholder():
         return
 
     def text_most_common(self):
-        with codecs.open(self._filepath+".txt","r","utf-8") as f:
+        with codecs.open(self._filepath+".txt","r","latin-1") as f:
             lines = f.read()
             tknzr = TweetTokenizer()
             tknz_lines =tknzr.tokenize(lines)
@@ -63,7 +63,7 @@ class Placeholder():
         return self._mostcommon
 
     def text_total_counts(self):
-        with codecs.open(self._filepath+".txt","r","utf-8") as f:
+        with codecs.open(self._filepath+".txt","r","latin-1") as f:
             lines = f.read()
             tknzr = TweetTokenizer()
             tknz_lines =tknzr.tokenize(lines)
@@ -72,7 +72,7 @@ class Placeholder():
 
     def hashtag_tracker(self):
         hashlist=[]
-        txt=codecs.open(self._filepath+".txt","r","utf-8")
+        txt=codecs.open(self._filepath+".txt","r","latin-1")
         reader=txt.read()
         for line in reader:
             hashtags=re.findall(r"#(\w+)", line)
@@ -87,7 +87,7 @@ class Placeholder():
 
     def link_and_hashtag_remover(self):
         text_file = open(self._filepath+"-notrash.txt", "w")
-        with codecs.open(self._filepath+".txt","r","utf-8") as f:
+        with codecs.open(self._filepath+".txt","r","latin-1") as f:
             lines=f.read()
             nolinks = re.sub("htt.+:[\/||\w||.||\-||=]+", "link_placeholder", lines)
             hashless=re.sub(r"#(\w+)", '', nolinks, flags=re.MULTILINE)
