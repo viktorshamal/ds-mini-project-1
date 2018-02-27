@@ -14,10 +14,13 @@ import os
 
 #def sentimentscore():
 af = afinn.Afinn(language="da")
-path = 'infomedia_data/'
-text_files = glob.glob(path + "*.txt")
+path = 'instagram/scrapefiles/'
+path1 = 'instagram/scrapefiles/'
+text_files = glob.glob(path + "*notrash.txt")
 results = []
-cities = ["amager","indreby","nørrebro","torvehallerne","valby","vesterbro","østerbro"]
+cities = ["amager","indreby","nørrebro",
+          "torvehallerne","valby","vesterbro",
+          "østerbro"]
 print(text_files)
 for tf in text_files:
     path = os.path.splitext(tf)[0]
@@ -25,10 +28,10 @@ for tf in text_files:
     with codecs.open(tf,encoding = "latin-1" ) as f:
         text = f.read()
         score = af.score(text)
-        results.append(score)
+        results.append(score/(len(text)))
 #        with codecs.open(articles,encoding = "latin-1") as f:
 print(results)
-with open("twitterdata/sentiment_results/results.txt","w") as f:
-    for result in results:
-        f.write(str(result)+"\n")
+with open(path1+"/sentiment_results/results.txt","w") as f:
+    for result,city in zip(results,cities):
+        f.write(str(city)+": "+str(result)+"\n")
 #print(sentimentscore())
