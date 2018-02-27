@@ -9,10 +9,7 @@ import codecs
 from sys import argv
 import glob
 import os
-#from algs4.stdlib import stdio
-#file = argv[1]
 
-#def sentimentscore():
 af = afinn.Afinn(language="da")
 path = 'infomedia_data/'
 text_files = glob.glob(path + "*.txt")
